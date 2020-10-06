@@ -1,0 +1,148 @@
+<html xml:lang="zh-CN">
+<head>
+	<title>邮件链接生成器</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="author" content="Spark">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<style>
+		body {
+			margin: 0 auto;
+			font-family:system-ui
+		}
+		#gen input[type=text] {width:100%; font-size:large;}
+		#gen textarea { width:100%; font-size:large}
+		.button {
+			background-color: #444;
+			border: none;
+			color: white;
+			padding: 4px 4px;
+			text-align: center;
+			display: inline-block;
+			font-size: large;
+			margin: 4px 4%;
+			cursor: pointer;
+			width: 120px;
+		}
+	</style>
+	<script>
+		function Generate()
+		{
+			TextTo = gen.TextTo;
+			TextCc = gen.TextCc;
+			TextBcc = gen.TextBcc;
+			TextSub = gen.TextSub;
+			TextBody = gen.TextBody;
+			TextLink = gen.TextLink;
+			if (TextTo.value=='')
+				alert("请填写收件人。");
+			else
+			{
+				var link = 'mailto:';
+				var i=0, d=1;
+				if (TextTo.value.indexOf(' ') !=-1 | TextTo.value.indexOf('，') !=-1)
+				{
+					alert("请确保收件人栏中无空格。\n请使用英文逗号间隔多个地址。");
+					d=0;
+				}
+				else if (TextTo.value.indexOf('@') ==-1)
+				{
+					alert("请检查收件人地址。");
+					d=0;
+				}
+				else
+					link += TextTo.value;
+				if (TextCc.value!='')
+				{
+					if (TextCc.value.indexOf(' ') !=-1 | TextCc.value.indexOf('，') !=-1)
+					{
+						alert("请确保抄送栏中无空格。\n请使用英文逗号间隔多个地址。");
+						d=0;
+					}
+					else if (TextCc.value.indexOf('@') ==-1)
+					{
+						alert("请检查抄送地址。");
+						d=0;
+					}
+					else
+					{
+						link += (i++==0?'?':'&');
+						link += 'cc=';
+						link += TextCc.value;
+					}
+				}
+				if (TextBcc.value!='')
+				{
+					if (TextBcc.value.indexOf(' ') !=-1 | TextBcc.value.indexOf('，') !=-1)
+					{
+						alert("请确保密送栏中无空格。\n请使用英文逗号间隔多个地址。");
+						d=0;
+					}
+					else if (TextBcc.value.indexOf('@') ==-1)
+					{
+						alert("请检查密送地址。");
+						d=0;
+					}
+					else
+					{
+						link += (i++==0?'?':'&');
+						link += 'bcc=';
+						link += TextBcc.value;
+					}
+				}
+				if (TextSub.value!='')
+				{
+					link += (i++==0?'?':'&');
+					link += 'subject=';
+					link += encodeURIComponent(TextSub.value);
+				}
+				if (TextBody.value!='')
+				{
+					link += (i++==0?'?':'&');
+					link += 'body=';
+					link += encodeURIComponent(TextBody.value);
+				}
+			}
+			if (d==1)
+			{
+				TextLink.value = link;
+				document.getElementById('testlink').href = link;
+				document.getElementById('testlink').style = '';
+			}
+		}
+		function Reset() 
+		{
+			TextTo.value = "";
+			TextCc.value = "";
+			TextBcc.value = "";
+			TextSub.value = "";
+			TextBody.value = "";
+			TextLink.value = "";
+			document.getElementById('testlink').style = "display:none";
+		}
+	</script> 
+</head>
+<body>
+	<div style="padding:10px;" align="center">
+		<H1 style="text-align: center; ">邮件链接生成器</H1>
+		<form id="gen" name="generator" style="width:100%; max-width: 450px;">
+			<p style="text-align: left;"><br>收件人：</p>
+			<p><input type="text" id="TextTo" name="TextTo" placeholder="1@mail.com,2@mail.com"></p>
+			<p style="text-align: left;">抄送：</p>
+			<p><input type="text" id="TextCc" name="TextCc" placeholder="cc@mail.com"></p>
+			<p style="text-align: left;">密送：</p>
+			<p><input type="text" id="TextBcc" name="TextBcc" placeholder="bcc@mail.com"></p>
+			<p style="text-align: left;">主题：</p>
+			<p><input type="text" id="TextSub" name="TextSub"></p>
+			<p style="text-align: left;">正文：</p>
+			<p><textarea rows="5" id="TextBody" name="TextBody" style="resize:vertical"></textarea></p>
+			<p align="center">
+				<input type="button" class="button" value="生成" onclick="Generate()">
+				<input type="button" class="button" value="复位" onclick="Reset()">
+			</p>
+			<p style="text-align: left;">邮件超链接：<a style="display:none" id="testlink">点击测试</a></p>
+			<p><textarea rows="10" id="TextLink" name="TextLink" style="resize:vertical"></textarea></p>
+			<p style="text-align: center;">中文｜<a style="text-decoration:none;" href="./en/">English</a></p>
+		</form>	
+	</div>
+</body>
+</html>

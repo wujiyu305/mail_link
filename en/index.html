@@ -1,0 +1,148 @@
+<html xml:lang="en-US">
+<head>
+	<title>Mail Link Generator</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="author" content="Spark">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<style>
+		body {
+			margin: 0 auto;
+			font-family:system-ui
+		}
+		#gen input[type=text] {width:100%; font-size:large;}
+		#gen textarea { width:100%; font-size:large}
+		.button {
+			background-color: #444;
+			border: none;
+			color: white;
+			padding: 4px 4px;
+			text-align: center;
+			display: inline-block;
+			font-size: large;
+			margin: 4px 4%;
+			cursor: pointer;
+			width: 120px;
+		}
+	</style>
+	<script>
+		function Generate()
+		{
+			TextTo = gen.TextTo;
+			TextCc = gen.TextCc;
+			TextBcc = gen.TextBcc;
+			TextSub = gen.TextSub;
+			TextBody = gen.TextBody;
+			TextLink = gen.TextLink;
+			if (TextTo.value=='')
+				alert("Please fill the To.");
+			else
+			{
+				var link = 'mailto:';
+				var i=0, d=1;
+				if (TextTo.value.indexOf(' ') !=-1 | TextTo.value.indexOf('，') !=-1)
+				{
+					alert("Please make sure there is no space in To.\nSeparate addresses with English comma.");
+					d=0;
+				}
+				else if (TextTo.value.indexOf('@') ==-1)
+				{
+					alert("Pleas check mail address in To.");
+					d=0;
+				}
+				else
+					link += TextTo.value;
+				if (TextCc.value!='')
+				{
+					if (TextCc.value.indexOf(' ') !=-1 | TextCc.value.indexOf('，') !=-1)
+					{
+						alert("Please make sure there is no space in Cc.\nSeparate addresses with English comma.");
+						d=0;
+					}
+					else if (TextCc.value.indexOf('@') ==-1)
+					{
+						alert("Pleas check mail address in Cc.");
+						d=0;
+					}
+					else
+					{
+						link += (i++==0?'?':'&');
+						link += 'cc=';
+						link += TextCc.value;
+					}
+				}
+				if (TextBcc.value!='')
+				{
+					if (TextBcc.value.indexOf(' ') !=-1 | TextBcc.value.indexOf('，') !=-1)
+					{
+						alert("Please make sure there is no space in Bcc.\nSeparate addresses with English comma.");
+						d=0;
+					}
+					else if (TextBcc.value.indexOf('@') ==-1)
+					{
+						alert("Pleas check mail address in Bcc.");
+						d=0;
+					}
+					else
+					{
+						link += (i++==0?'?':'&');
+						link += 'bcc=';
+						link += TextBcc.value;
+					}
+				}
+				if (TextSub.value!='')
+				{
+					link += (i++==0?'?':'&');
+					link += 'subject=';
+					link += encodeURIComponent(TextSub.value);
+				}
+				if (TextBody.value!='')
+				{
+					link += (i++==0?'?':'&');
+					link += 'body=';
+					link += encodeURIComponent(TextBody.value);
+				}
+			}
+			if (d==1)
+			{
+				TextLink.value = link;
+				document.getElementById('testlink').href = link;
+				document.getElementById('testlink').style = '';
+			}
+		}
+		function Reset() 
+		{
+			TextTo.value = "";
+			TextCc.value = "";
+			TextBcc.value = "";
+			TextSub.value = "";
+			TextBody.value = "";
+			TextLink.value = "";
+			document.getElementById('testlink').style = "display:none";
+		}
+	</script> 
+</head>
+<body>
+	<div style="padding:10px;" align="center">
+		<H1 style="text-align: center;">Mail Link Generator</H1>
+		<form id="gen" name="generator" style="width:100%; max-width: 450px;">
+			<p style="text-align: left;"><br>To:</p>
+			<p><input type="text" id="TextTo" name="TextTo" placeholder="1@mail.com,2@mail.com"></p>
+			<p style="text-align: left;">Cc:</p>
+			<p><input type="text" id="TextCc" name="TextCc" placeholder="cc@mail.com"></p>
+			<p style="text-align: left;">Bcc:</p>
+			<p><input type="text" id="TextBcc" name="TextBcc" placeholder="bcc@mail.com"></p>
+			<p style="text-align: left;">Subject:</p>
+			<p><input type="text" id="TextSub" name="TextSub"></p>
+			<p style="text-align: left;">Body:</p>
+			<p><textarea rows="5" id="TextBody" name="TextBody" style="resize:vertical"></textarea></p>
+			<p align="center">
+				<input type="button" class="button" value="Generate" onclick="Generate()">
+				<input type="button" class="button" value="Reset" onclick="Reset()">
+			</p>
+			<p style="text-align: left;">Mail Hyper Link: <a style="display:none" id="testlink">Click to test</a></p>
+			<p><textarea rows="10" id="TextLink" name="TextLink" style="resize:vertical"></textarea></p>
+			<p style="text-align: center;"><a style="text-decoration: none;" href="../">中文</a>｜English</p>
+		</form>	
+	</div>
+</body>
+</html>
